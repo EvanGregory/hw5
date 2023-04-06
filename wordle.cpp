@@ -13,7 +13,8 @@ using namespace std;
 
 
 // Add prototypes of helper functions here
-
+std::set<std::string> fillAllLetters(const std::string& s, const std::string& floating, int pos);
+std::set<std::string> removeBadWords(const std::set<std::string>& in, const std::set<std::string>& dict);
 
 // Definition of primary wordle function
 std::set<std::string> wordle(
@@ -22,13 +23,13 @@ std::set<std::string> wordle(
     const std::set<std::string>& dict)
 {
     // Add your code here
-  std::set<std::string> correctWords = fillAllLetters(in, floating);
+  std::set<std::string> correctWords = fillAllLetters(in, floating, 0);
   return removeBadWords(correctWords, dict);
 }
 
 // Define any helper functions here
 
-std::set<std::string> fillAllLetters(const std::string& s, const std::string& floating, int pos = 0)
+std::set<std::string> fillAllLetters(const std::string& s, const std::string& floating, int pos)
 {
   std::set<std::string> currSet{};
   if (s.empty() || pos >= s.size())

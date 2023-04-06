@@ -7,3 +7,5 @@ schedwork-driver
 /.vs
 /schedwork-driver.cpp
 /wordle-driver.cpp
+/dict-eng.txt
+/dict-eng.cpp

@@ -33,29 +33,52 @@ std::set<std::string> fillAllLetters(const std::string& s, const std::string& fl
 {
   std::set<std::string> currSet{};
   if (s.empty() || pos >= s.size())
+  {
+    currSet.insert(s);
     return currSet;
+  }
   //(s.substr(0, pos) + letter + s.substr(pos))
   if (s[pos] != '-')
   {
     return fillAllLetters(s, floating, pos + 1);
   }
+  /*
+  size_t i = 0;
+  for (char letter : floating)
+    if (s.find(letter) != s.npos)
+      i++;
+  */
+  size_t numBlanks = 0;
+  size_t blankPos = s.find_first_of('-');
+  while (blankPos != s.npos)
+  {
+    blankPos = s.find_first_of('-', blankPos + 1);
+    numBlanks++;
+  }
+  if (floating.size() >= numBlanks)
+  {
+    for (char letter : floating)
+    {
+      auto i = floating.find(letter);
+      std::set<std::string> subSet;
+      if (i != floating.npos)
+        subSet = fillAllLetters(s.substr(0, pos) + letter + s.substr(pos + 1), floating.substr(0, i) + floating.substr(i + 1), pos + 1);
+      else
+        subSet = fillAllLetters(s.substr(0, pos) + letter + s.substr(pos + 1), floating, pos + 1);
+      currSet.insert(subSet.begin(), subSet.end());
+    }
+  }
   else
   {
-    if (floating.size() >= s.size() - pos)
+    for (char letter = 'a'; letter <= 'z'; letter++)
     {
-      for (char letter : floating)
-      {
-        std::set<std::string> subSet = fillAllLetters(s.substr(0, pos) + letter + s.substr(pos), floating, pos + 1);
-        currSet.insert(subSet.begin(), subSet.end());
-      }
-    }
-    else
-    {
-      for (char letter = 'a'; letter <= 'z'; letter++)
-      {
-        std::set<std::string> subSet = fillAllLetters(s.substr(0, pos) + letter + s.substr(pos), floating, pos + 1);
-        currSet.insert(subSet.begin(), subSet.end());
-      }
+      auto i = floating.find(letter);
+      std::set<std::string> subSet;
+      if (i != floating.npos)
+        subSet = fillAllLetters(s.substr(0, pos) + letter + s.substr(pos + 1), floating.substr(0, i) + floating.substr(i + 1), pos + 1);
+      else
+        subSet = fillAllLetters(s.substr(0, pos) + letter + s.substr(pos + 1), floating, pos + 1);
+      currSet.insert(subSet.begin(), subSet.end());
     }
   }
   return currSet;

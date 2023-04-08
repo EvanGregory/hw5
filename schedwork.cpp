@@ -21,7 +21,7 @@ using namespace std;
 static const Worker_T INVALID_ID = (unsigned int)-1;
 
 
-// Add prototypes for any helper functions here
+// Add prototypes fer any helper functions here
 std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
   const size_t dailyNeed,
   const size_t maxShifts, const DailySchedule& workerCombos,
@@ -62,6 +62,34 @@ bool schedule(
     return true;
 }
 
+bool recurseCheck(const AvailabilityMatrix& avail, const DailySchedule& sched, 
+  size_t day, int i)
+{
+  if (!avail[day][ sched[day][i] ])
+  {
+    return false;
+  }
+  if (sched[day].size() - 1 == i)
+  {
+    return true;
+  }
+
+  return recurseCheck(avail, sched, day, i + 1);
+}
+
+bool recurseOverwork(const DailySchedule& sched, vector<int>& daysWorked,const size_t dailyNeed, const size_t maxShifts, const size_t day, int i)
+{
+  Worker_T worker = sched[day][i];
+  daysWorked[worker]++;
+  if (daysWorked[worker] > maxShifts)
+    return false;
+  if (i == dailyNeed - 1)
+  {
+    return true;
+  }
+  return recurseOverwork(sched, daysWorked, dailyNeed, maxShifts, day, i + 1);
+}
+
 std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
   const size_t dailyNeed,
   const size_t maxShifts,
@@ -73,9 +101,12 @@ std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
   {
     //checks if previous day uses only available workers
     if (pos > 0)
-      for (Worker_T worker : sched[pos - 1])
-        if (!avail[pos - 1][worker])
-          return make_pair(false, sched);
+      //recurseCheck
+    {
+      bool checkAvail = recurseCheck(avail, sched, pos - 1, 0);
+      if (!checkAvail)
+        return make_pair(false, sched);
+    }
 
     //checks if any worker is overworked
     vector<int> daysWorked;
@@ -83,13 +114,9 @@ std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
 
     for (int day = 0; day < pos; day++)
     {
-      for (int i = 0; i < dailyNeed; i++)
-      {
-        Worker_T worker = sched[day][i];
-        daysWorked[worker]++;
-        if (daysWorked[worker] > maxShifts)
-          return make_pair(false, sched);
-      }
+      bool check = recurseOverwork(sched, daysWorked, dailyNeed, maxShifts, day, 0);
+      if (!check)
+        return make_pair(false, sched);
     }
     //could add more precise backtracing checks here, look ahead to see if the current state is impossible
   }
@@ -100,6 +127,7 @@ std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
     return make_pair(true, sched);
   }
 
+  //recurseBig
   for (vector<Worker_T> attempt : workerCombos)
   {
     DailySchedule tempSched = sched;

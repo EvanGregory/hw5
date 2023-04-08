@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <numeric>
 #include <algorithm>
 // add or remove necessary headers as you please
 
@@ -46,15 +47,11 @@ bool schedule(
     vector<Worker_T> workerIDs;
     DailySchedule workerCombos;
     //initialize combo
-    for (int i = 0; i < dailyNeed; i++)
-    {
-      combo.push_back(INVALID_ID);
-    }
+    combo.resize(dailyNeed, INVALID_ID);
+
     //initialize ids
-    for (int i = 0; i < avail[0].size(); i++)
-    {
-      workerIDs.push_back(i);
-    }
+    workerIDs.resize(avail[0].size())
+    std::iota(workerIDs.begin(), workerIDs.end(), 0);
 
     //generate all possible combinations
     workerCombinations(workerIDs, dailyNeed, 0, combo, workerCombos);
@@ -82,8 +79,7 @@ std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
 
     //checks if any worker is overworked
     vector<int> daysWorked;
-    for (bool t : avail[0])
-      daysWorked.push_back(0);
+    daysWorked.resize(avail[0].size());
 
     for (int day = 0; day < pos; day++)
     {

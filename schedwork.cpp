@@ -50,7 +50,7 @@ bool schedule(
     combo.resize(dailyNeed, INVALID_ID);
 
     //initialize ids
-    workerIDs.resize(avail[0].size())
+    workerIDs.resize(avail[0].size());
     std::iota(workerIDs.begin(), workerIDs.end(), 0);
 
     //generate all possible combinations
@@ -64,7 +64,7 @@ bool schedule(
 
 std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
   const size_t dailyNeed,
-  const size_t maxShifts, 
+  const size_t maxShifts,
   const DailySchedule& workerCombos,
   DailySchedule sched, const size_t pos)
 {
@@ -109,6 +109,7 @@ std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
       return pairAttempt;
   }
   return make_pair(false, sched);
+}
 
 void workerCombinations(vector<Worker_T> arr, int len, int startPosition, vector<Worker_T>& combo, DailySchedule& result) 
 {

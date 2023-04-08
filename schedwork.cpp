@@ -121,7 +121,6 @@ void workerCombinations(vector<Worker_T> arr, int len, int startPosition, vector
 
   for (int i = startPosition; i <= arr.size() - len; i++) 
   {
-
     combo[combo.size() - len] = arr[i];
     workerCombinations(arr, len - 1, i + 1, combo, result);
   }

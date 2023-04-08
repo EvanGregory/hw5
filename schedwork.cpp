@@ -26,8 +26,6 @@ std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
   const size_t maxShifts, const DailySchedule& workerCombos,
   DailySchedule sched, const size_t pos);
 
-Worker_T findWorker(const AvailabilityMatrix& avail, size_t day, size_t& pos);
-
 void workerCombinations(std::vector<Worker_T> arr, int len, int startPosition, std::vector<Worker_T>& combo, DailySchedule& result);
 
 // Add your implementation of schedule() and other helper functions here
@@ -115,78 +113,6 @@ std::pair<bool, DailySchedule> recurseFillSched(const AvailabilityMatrix& avail,
       return pairAttempt;
   }
   return make_pair(false, sched);
-
-  //vector<vector<Worker_T>> attemptList;
-  //while(true)
-  //{
-  //  size_t workerPos = 0;
-  //  DailySchedule tempSched = sched;
-  //  //pushback a worker dailyNeed times
-  //  for (size_t num = 1; num <= dailyNeed; num++)
-  //  {
-  //    
-  //    vector<Worker_T> superTemp;
-  //    Worker_T currWorker;
-  //    //if we have already tried that worker combination, try again
-  //    do { 
-  //      superTemp = tempSched[pos];
-  //      currWorker = findWorker(avail, pos, workerPos); 
-  //      superTemp.push_back(currWorker);
-  //    }
-  //    while (std::find(attemptList.begin(), attemptList.end(), superTemp) != attemptList.end());
-  //    if (currWorker == INVALID_ID)
-  //    {
-  //      //find last available worker
-  //      return make_pair(false, sched);
-  //    }
-  //    tempSched[pos].push_back(currWorker);
-
-  //  }
-  //  std::pair<bool, DailySchedule> attempt = recurseFillSched(avail, dailyNeed, maxShifts, tempSched, pos + 1);
-  //  if (attempt.first)
-  //    return attempt;
-  //  attemptList.push_back(attempt.second[pos]);
-  //}
-  //return make_pair(false, sched);
-
-  //for each possible combination of available workers today, recursive call passing down sched with one more day filled in. pass pos + 1 for next day
-
-  //for (int worker1 = 0; worker1 < avail[pos].size() - 1; worker1++)
-  //  if (avail[pos][worker1])
-  //    for (int worker2 = worker1 + 1; worker2 < avail[pos].size(); worker2++)
-  //      if (avail[pos][worker2])
-  //      {
-  //        DailySchedule tempSched = sched;
-  //        tempSched[pos].push_back(worker1);
-  //        tempSched[pos].push_back(worker2);
-  //        std::pair<bool, DailySchedule> attempt = recurseFillSched(avail, dailyNeed, maxShifts, tempSched, pos + 1);
-  //        if (attempt.first)
-  //          return attempt;
-  //      }
-  //return make_pair(false, sched);
-  //  //if true, return true recursive call
-  ////if false, return false, dont care about state of sched
-}
-
-
-Worker_T findWorker(const AvailabilityMatrix& avail, size_t day, size_t& pos)
-{
-  if (pos >= avail[day].size()) return INVALID_ID;
-
-  for (Worker_T worker = pos; worker < avail[day].size(); worker++)
-  {
-    if (avail[day][worker]) {
-      pos = worker + 1;
-      return worker;
-    }
-  }
-
-  return INVALID_ID;
-}
-
-
-
-// ex. combinations2(arr, 3, 0, new String[3]);
 
 void workerCombinations(vector<Worker_T> arr, int len, int startPosition, vector<Worker_T>& combo, DailySchedule& result) 
 {
